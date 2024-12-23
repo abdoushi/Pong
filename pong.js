@@ -20,7 +20,7 @@ let computerPlayer = {
   y: boardHeight / 2 - playerHeight / 2,
   width: playerWidth,
   height: playerHeight,
-  velocityY: 4,
+  velocityY: 3.2,
 };
 
 //خصائص الكرة
@@ -84,13 +84,13 @@ function update() {
     if (ball.x <= player1.x + player1.width) {
       ball.velocityX *= -1;
       speedUpBall();
-      increaseComputerSpeed();
+      
     }
   } else if (detectCollision(ball, computerPlayer)) {
     if (ball.x + ballWidth >= computerPlayer.x) {
       ball.velocityX *= -1;
       speedUpBall();
-      increaseComputerSpeed();
+      
     }
   }
 
@@ -120,15 +120,15 @@ function speedUpBall() {
   ball.velocityX += ball.velocityX > 0 ? speedFactor : -speedFactor;
   ball.velocityY += ball.velocityY > 0 ? speedFactor : -speedFactor;
 }
-function increaseComputerSpeed() {
-  ballHitCounter++;
+// function increaseComputerSpeed() {
+//   ballHitCounter++;
 
-  // زيادة سرعه الكمبيوتر عند كل اصطدام
-  if (ballHitCounter >= 1) {
-    computerPlayer.velocityY += 1; // قيمة الزيادة
-    ballHitCounter = 0;
-  }
-}
+//   // زيادة سرعه الكمبيوتر عند كل اصطدام
+//   if (ballHitCounter >= 1) {
+//     computerPlayer.velocityY += 1; // قيمة الزيادة
+//     ballHitCounter = 0;
+//   }
+// }
 function detectCollision(a, b) {
   return (
     //دالة التحقق من الاصطدامات
