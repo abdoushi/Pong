@@ -1,10 +1,9 @@
-//اللوحة
 let board;
 let boardWidth = 500;
 let boardHeight = 500;
 let context;
 
-//احجام اللاعبين
+// احجام اللاعبين
 let playerWidth = 10;
 let playerHeight = 50;
 
@@ -23,7 +22,7 @@ let computerPlayer = {
   velocityY: 3.2,
 };
 
-//خصائص الكرة
+// خصائص الكرة
 let ballWidth = 10;
 let ballHeight = 10;
 let ball = {
@@ -38,6 +37,9 @@ let ball = {
 let player1Score = 0;
 let computerScore = 0;
 
+let isGameRunning = false;
+let animationFrameId;
+
 window.onload = function () {
   board = document.getElementById("board");
   board.height = boardHeight;
@@ -47,11 +49,29 @@ window.onload = function () {
   // حدث الاستجابة لحركة الماوس
   board.addEventListener("mousemove", movePlayer);
 
-  requestAnimationFrame(update);
+  // زر البداية
+  document.getElementById("startButton").addEventListener("click", startGame);
+
+  // زر التوقف
+  document.getElementById("pauseButton").addEventListener("click", pauseGame);
 };
-let ballHitCounter = 0;
+
+function startGame() {
+  if (!isGameRunning) {
+    isGameRunning = true;
+    update();
+  }
+}
+
+function pauseGame() {
+  isGameRunning = false;
+  cancelAnimationFrame(animationFrameId);
+}
+
 function update() {
-  requestAnimationFrame(update);
+  if (!isGameRunning) return;
+
+  animationFrameId = requestAnimationFrame(update);
   context.clearRect(0, 0, board.width, board.height);
 
   // شكل اللاعب
@@ -84,13 +104,11 @@ function update() {
     if (ball.x <= player1.x + player1.width) {
       ball.velocityX *= -1;
       speedUpBall();
-      
     }
   } else if (detectCollision(ball, computerPlayer)) {
     if (ball.x + ballWidth >= computerPlayer.x) {
       ball.velocityX *= -1;
       speedUpBall();
-      
     }
   }
 
@@ -120,18 +138,10 @@ function speedUpBall() {
   ball.velocityX += ball.velocityX > 0 ? speedFactor : -speedFactor;
   ball.velocityY += ball.velocityY > 0 ? speedFactor : -speedFactor;
 }
-// function increaseComputerSpeed() {
-//   ballHitCounter++;
 
-//   // زيادة سرعه الكمبيوتر عند كل اصطدام
-//   if (ballHitCounter >= 1) {
-//     computerPlayer.velocityY += 1; // قيمة الزيادة
-//     ballHitCounter = 0;
-//   }
-// }
 function detectCollision(a, b) {
   return (
-    //دالة التحقق من الاصطدامات
+    // دالة التحقق من الاصطدامات
     a.x < b.x + b.width &&
     a.x + a.width > b.x &&
     a.y < b.y + b.height &&
@@ -140,7 +150,7 @@ function detectCollision(a, b) {
 }
 
 function movePlayer(e) {
-  //دالة تتبع الماوس
+  // دالة تتبع الماوس
   let rect = board.getBoundingClientRect();
   let mouseY = e.clientY - rect.top;
 
@@ -151,7 +161,6 @@ function movePlayer(e) {
 
 function computerAI() {
   // دالة تتبع الكمبيوتر للكرة
-
   if (ball.y < computerPlayer.y) {
     computerPlayer.y -= computerPlayer.velocityY;
   } else if (ball.y > computerPlayer.y + playerHeight) {
@@ -159,7 +168,6 @@ function computerAI() {
   }
 
   // منع الكمبيوتر من الخروج خارج اللوحة
-
   if (computerPlayer.y < 0) {
     computerPlayer.y = 0;
   } else if (computerPlayer.y + playerHeight > boardHeight) {
